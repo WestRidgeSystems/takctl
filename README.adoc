@@ -33,3 +33,4 @@ For takctl development, you should prefer using Quarkus development mode, descri
 Quarkus dev mode is invoked by running `quarkus dev`.
 Dev mode allows the application to be quickly re-run as code is modified by pressing the <space> key.
 Command-line options may be modified within the session by pressing the 'e' key.
+

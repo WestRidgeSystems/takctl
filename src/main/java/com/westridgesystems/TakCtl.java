@@ -1,11 +1,31 @@
 package com.westridgesystems;
 
-import com.westridgesystems.commands.*;
+import com.westridgesystems.commands.ConnectCommand;
+import com.westridgesystems.commands.CredsCommand;
+import com.westridgesystems.commands.StatusCommand;
+import com.westridgesystems.commands.UserCommand;
+import com.westridgesystems.commands.server.ServerCommand;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
-import picocli.CommandLine.Command;
+import io.quarkus.runtime.QuarkusApplication;
+import io.quarkus.runtime.annotations.QuarkusMain;
+import jakarta.inject.Inject;
+import picocli.CommandLine;
 
+@QuarkusMain
 @TopCommand
-@Command(name = "takctl", mixinStandardHelpOptions = true,
-        subcommands = {ConnectCommand.class, CredsCommand.class, ServerCommand.class, StatusCommand.class, UserCommand.class})
-public class TakCtl {
+@CommandLine.Command(name = "takctl", mixinStandardHelpOptions = true,
+        subcommands = {ConnectCommand.class, CredsCommand.class, ServerCommand.class, StatusCommand.class,
+                UserCommand.class})
+public class TakCtl implements QuarkusApplication {
+
+    public static String APPLICATION_NAME = "takctl";
+
+    @Inject
+    CommandLine.IFactory factory;
+
+    @Override
+    public int run(String... args) throws Exception {
+        return new CommandLine(this, factory).
+                execute(args);
+    }
 }
