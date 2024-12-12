@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class TakCtlConfig {
-    private final Map<String, TakServer> takServers = new java.util.HashMap<>();
+    private final Map<String, TakServer> takServers = new java.util.TreeMap<>();
 
     TakCtlConfig() {
     }
