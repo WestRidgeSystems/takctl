@@ -16,6 +16,10 @@ public class TakCtlConfig {
         takServers.put(name, takServer);
     }
 
+    public boolean removeTakServer(String name) {
+        return takServers.remove(name) != null;
+    }
+
     public TakServer getTakServer(String name) {
         return takServers.get(name);
     }
