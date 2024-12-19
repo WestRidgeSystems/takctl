@@ -6,10 +6,11 @@ import jakarta.inject.Inject;
 import picocli.CommandLine;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "list", mixinStandardHelpOptions = true,
         description = "List TAK servers.")
-public class ListServers implements Runnable {
+public class ListServers implements Callable<Integer> {
 
     @Inject
     TakCtlConfig config;
@@ -18,11 +19,12 @@ public class ListServers implements Runnable {
     CommandLine.Model.CommandSpec spec;
 
     @Override
-    public void run() {
+    public Integer call() throws Exception {
         for (Map.Entry<String, TakServer> entry : config.getTakServers().entrySet()) {
             spec.commandLine().getOut().println("Server Name: " + entry.getKey() + ", Hostname: " + entry.getValue().getHostname() +
                     ", " +
                     "Port: " + entry.getValue().getPort());
         }
+        return 0;
     }
 }

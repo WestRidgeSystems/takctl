@@ -5,10 +5,11 @@ import jakarta.inject.Inject;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "remove", mixinStandardHelpOptions = true,
         description = "Remove a TAK server.")
-public class RemoveServer implements Runnable {
+public class RemoveServer implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-n", "--name"}, required = true, description = "Server name.")
     private String name;
@@ -20,7 +21,7 @@ public class RemoveServer implements Runnable {
     CommandLine.Model.CommandSpec spec;
 
     @Override
-    public void run() {
+    public Integer call() throws Exception {
         if (config.removeTakServer(name)) {
             try {
                 config.writeFile();
@@ -31,5 +32,6 @@ public class RemoveServer implements Runnable {
         } else {
             spec.commandLine().getOut().println("No such server: " + name);
         }
+        return 0;
     }
 }

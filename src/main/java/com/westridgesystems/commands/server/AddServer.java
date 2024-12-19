@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "add", mixinStandardHelpOptions = true,
         description = "Add a new TAK server.")
-public class AddServer implements Runnable {
+public class AddServer implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-n", "--name"}, required = true, description = "Server name.")
     private String name;
@@ -36,7 +37,7 @@ public class AddServer implements Runnable {
     CommandLine.Model.CommandSpec spec;
 
     @Override
-    public void run() {
+    public Integer call() throws Exception {
         config.addTakServer(name, new TakServer(hostname, port));
         try {
             config.writeFile();
@@ -47,6 +48,7 @@ public class AddServer implements Runnable {
         if (caCert != null) {
             importCaCert();
         }
+        return 0;
     }
 
     private void importCaCert() {
