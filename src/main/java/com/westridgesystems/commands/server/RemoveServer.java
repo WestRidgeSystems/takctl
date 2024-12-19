@@ -4,7 +4,6 @@ import com.westridgesystems.config.TakCtlConfig;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "remove", mixinStandardHelpOptions = true,
@@ -23,14 +22,10 @@ public class RemoveServer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         if (config.removeTakServer(name)) {
-            try {
-                config.writeFile();
-                spec.commandLine().getOut().println("Removed server: " + name);
-            } catch (IOException e) {
-                spec.commandLine().getErr().println(e.getMessage());
-            }
+            config.writeFile();
+            spec.commandLine().getOut().println("Removed server: " + name);
         } else {
-            spec.commandLine().getOut().println("No such server: " + name);
+            throw new IllegalArgumentException("No such server: " + name);
         }
         return 0;
     }

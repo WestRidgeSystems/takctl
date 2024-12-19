@@ -39,19 +39,15 @@ public class AddServer implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         config.addTakServer(name, new TakServer(hostname, port));
-        try {
-            config.writeFile();
-            spec.commandLine().getOut().println("Added TAK server " + name + " @ " + hostname + ":" + port);
-        } catch (IOException e) {
-            spec.commandLine().getErr().println(e.getMessage());
-        }
+        config.writeFile();
+        spec.commandLine().getOut().println("Added TAK server " + name + " @ " + hostname + ":" + port);
         if (caCert != null) {
             importCaCert();
         }
         return 0;
     }
 
-    private void importCaCert() {
+    private void importCaCert() throws IOException {
         Path configPath = FileUtil.getConfigDir();
         String truststoreFilename = "truststore.jks";
         Path truststorePath = configPath.resolve(truststoreFilename);
@@ -65,7 +61,7 @@ public class AddServer implements Callable<Integer> {
                 keyStore.store(fos, truststorePassword.toCharArray());
                 spec.commandLine().getOut().println("Truststore created at: " + truststorePath);
             } catch (Exception e) {
-                spec.commandLine().getErr().println("Error creating truststore: " + e.getMessage());
+                throw new IOException("Error creating truststore: " + e.getMessage());
             }
         }
 
@@ -88,7 +84,7 @@ public class AddServer implements Callable<Integer> {
                     if (trustStore.containsAlias(alias)) {
                         spec.commandLine().getOut().println("Truststore has an existing entry for " + alias +
                                 ". Use keytool to remove it manually before importing.");
-                        return;
+                        throw new IOException("Error importing CA cert: truststore has an existing entry for " + alias);
                     }
                     trustStore.setCertificateEntry(alias, x509Certificate);
 
@@ -96,11 +92,13 @@ public class AddServer implements Callable<Integer> {
                     try (FileOutputStream out = new FileOutputStream(truststorePath.toFile())) {
                         trustStore.store(out, truststorePassword.toCharArray());
                         spec.commandLine().getOut().println("CA certificate imported into truststore: " + alias);
+                    } catch (Exception e) {
+                        throw new IOException("Error saving truststore: " + e.getMessage());
                     }
                 }
             }
         } catch (Exception e) {
-            spec.commandLine().getErr().println("Error importing CA cert: " + e.getMessage());
+            throw new IOException("Error importing CA cert: " + e.getMessage());
         }
     }
 }
