@@ -6,6 +6,7 @@ import com.westridgesystems.util.FileUtil;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class AddServer implements Callable<Integer> {
     private int port;
 
     @CommandLine.Option(names = {"-c", "--cacert"}, description = "Server CA certificate.")
-    private String caCert;
+    private File caCert;
 
     @Inject
     TakCtlConfig config;
@@ -71,8 +72,7 @@ public class AddServer implements Callable<Integer> {
             trustStore.load(fis, truststorePassword.toCharArray());
 
             // Open the cert
-            Path caCertPath = Path.of(caCert);
-            try (FileInputStream caInputStream = new FileInputStream(caCertPath.toFile())) {
+            try (FileInputStream caInputStream = new FileInputStream(caCert)) {
                 java.security.cert.Certificate caCertificate = java.security.cert.CertificateFactory.getInstance("X" +
                                 ".509")
                         .generateCertificate(caInputStream);
