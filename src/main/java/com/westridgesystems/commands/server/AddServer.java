@@ -50,7 +50,7 @@ public class AddServer implements Callable<Integer> {
 
     private void importCaCert() throws IOException {
         Path configPath = FileUtil.getConfigDir();
-        String truststoreFilename = "truststore.jks";
+        String truststoreFilename = "truststore.p12";
         Path truststorePath = configPath.resolve(truststoreFilename);
         String truststorePassword = "changeit";
 
@@ -73,9 +73,9 @@ public class AddServer implements Callable<Integer> {
 
             // Open the cert
             try (FileInputStream caInputStream = new FileInputStream(caCert)) {
-                java.security.cert.Certificate caCertificate = java.security.cert.CertificateFactory.getInstance("X" +
-                                ".509")
-                        .generateCertificate(caInputStream);
+                java.security.cert.Certificate caCertificate =
+                        java.security.cert.CertificateFactory.getInstance("X.509")
+                                .generateCertificate(caInputStream);
 
                 if (caCertificate instanceof X509Certificate x509Certificate) {
                     String alias = x509Certificate.getSubjectX500Principal().getName();
