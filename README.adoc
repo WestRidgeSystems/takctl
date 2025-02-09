@@ -15,8 +15,8 @@ For complete usage information, run `takctl --help`.
 
 == Building
 
-Takctl is intended to be run as a native binary rather than the JVM.
-(JVM startup time would be unacceptable for an interactive tool.) Therefore, it is recommended to build a native executable with GraalVM:
+Takctl is intended to be run as a native binary rather than the JVM, mainly to provide a fast startup time.
+Therefore, it is recommended to build a native executable with GraalVM:
 
 [source,shell]
 ----
@@ -26,11 +26,19 @@ quarkus build --native
 The build will output the `takctl` binary to the `build` directory.
 
 Native compilation can be too slow for practical use in the development cycle.
-For takctl development, you should prefer using Quarkus development mode, described next.
+For takctl development, you should prefer using Quarkus development mode.
 
-== Dev mode
-
-Quarkus dev mode is invoked by running `quarkus dev`.
-Dev mode allows the application to be quickly re-run as code is modified by pressing the <space> key.
+Development mode is invoked by running `quarkus dev`.
+This mode allows the application to be quickly re-run as code is modified by pressing the <space> key.
 Command-line options may be modified within the session by pressing the 'e' key.
+
+== Envisioned Use Cases
+
+Some use case ideas to inspire future development:
+
+- Manage TAK Server configuration from the CLI rather than a web app (feeds, QoS, everything else)
+- Add or remove users, generate client certs
+- View TAK Server health and metrics
+- Send messages to connected client(s), interactive chat
+
 

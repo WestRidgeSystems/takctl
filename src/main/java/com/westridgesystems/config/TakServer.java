@@ -1,5 +1,8 @@
 package com.westridgesystems.config;
 
+/**
+ * Represents a TAK server with a hostname and port.
+ */
 public class TakServer {
     private String hostname;
     private int port;

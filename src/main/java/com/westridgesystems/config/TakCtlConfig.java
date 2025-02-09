@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class TakCtlConfig {
     private final Map<String, TakServer> takServers = new java.util.TreeMap<>();
+    private final Map<String, TakUser> takUsers = new java.util.TreeMap<>();
 
     TakCtlConfig() {
     }

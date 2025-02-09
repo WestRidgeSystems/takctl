@@ -13,9 +13,12 @@ public class ConnectCommand implements Callable<Integer> {
             description = "Server to connect to.")
     String server;
 
+    @CommandLine.Spec
+    CommandLine.Model.CommandSpec spec;
+
     @Override
     public Integer call() throws Exception {
-        System.out.printf("Connecting to %s...\n", server);
+        spec.commandLine().getOut().println("Connecting to " + server + "...");
         return 0;
     }
 
